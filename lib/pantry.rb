@@ -26,9 +26,8 @@ class Pantry
     @shopping_list.each do |item, amount|
       items << "* #{item}: #{amount}"
     end
-    list = items.join("\n")
-    puts list
-    list
+    puts items.join("\n")
+    items.join("\n")
   end
 
   def add_to_cookbook(recipe)
@@ -58,32 +57,21 @@ class Pantry
         can_make << name
       end
     end
-  can_make
+    can_make
   end
 
   def how_many_of_these(recipe)
-    times = 1
     needed = needed_for_recipe(recipe)
-    loop do
-      enough = needed.map do |ingredient, amount|
-        false if stock_check(ingredient) < (amount * times)
-      end
-      if enough.include?(false)
-        times -= 1
-        break
-      else
-        times += 1
-      end
-    end
-    times
+    times = needed.map do |ingredient, amount|
+     stock_check(ingredient) / amount
+   end.min
   end
 
   def how_many_can_i_make
     can_make_many = {}
     @cookbook.each do |name, recipe|
       if can_i_make_this?(recipe)
-        times = how_many_of_these(recipe)
-        can_make_many[name] = times
+        can_make_many[name] = how_many_of_these(recipe)
       end
     end
     can_make_many
