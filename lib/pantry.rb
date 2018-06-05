@@ -35,17 +35,22 @@ class Pantry
     @cookbook[recipe.name] = recipe
   end
 
-  def can_i_make_this?(recipe)
+  def needed_for_recipe(recipe)
     needed = {}
     recipe.ingredient_types.each do |ingredient|
       needed[ingredient] = recipe.amount_required(ingredient)
     end
+    binding.pry
+    needed
+  end
+
+  def can_i_make_this?(recipe)
+    needed = needed_for_recipe(recipe)
     needed.each do |ingredient, amount|
       return false if stock_check(ingredient) < amount
     end
     return true
   end
-
 
   def what_can_i_make
     can_make = []
@@ -54,6 +59,34 @@ class Pantry
         can_make << name
       end
     end
-    can_make
+  can_make
+  end
+
+  def how_many_of_these(recipe)
+    times = 1
+    needed = needed_for_recipe(recipe)
+    loop do
+      enough = needed.map do |ingredient, amount|
+        false if stock_check(ingredient) < (amount * times)
+      end
+      if enough.include?(false)
+        times -= 1
+        break
+      else
+        times += 1
+      end
+    end
+    times
+  end
+
+  def how_many_can_i_make
+    can_make_many = {}
+    @cookbook.each do |name, recipe|
+      if can_i_make_this?(recipe)
+        times = how_many_of_these(recipe)
+        can_make_many[name] = times
+      end
+    end
+    can_make_many
   end
 end

@@ -133,6 +133,8 @@ class PantryTest < Minitest::Test
     @pantry.restock("Raw nuts", 20)
     @pantry.restock("Salt", 20)
     can_make_number = {"Pickles" => 4, "Peanuts" => 2}
+    assert_equal 4, @pantry.how_many_of_these(r2)
+    assert_equal 2, @pantry.how_many_of_these(r3)
     assert_equal can_make_number, @pantry.how_many_can_i_make
   end
 
