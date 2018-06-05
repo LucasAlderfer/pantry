@@ -88,6 +88,19 @@ class PantryTest < Minitest::Test
     assert_equal recipes, @pantry.cookbook
   end
 
+  def test_it_knows_what_is_needed_for_a_recipe
+    r1 = Recipe.new("Cheese Pizza")
+    r1.add_ingredient("Cheese", 20)
+    r1.add_ingredient("Flour", 20)
+    r2 = Recipe.new("Pickles")
+    r2.add_ingredient("Brine", 10)
+    r2.add_ingredient("Cucumbers", 30)
+    needed_1 = {"Cheese" => 20, "Flour" => 20}
+    needed_2 = {"Brine" => 10, "Cucumbers" => 30}
+    assert_equal needed_1, @pantry.needed_for_recipe(r1)
+    assert_equal needed_2, @pantry.needed_for_recipe(r2)
+  end
+
   def test_pantry_knows_what_it_can_make
     r1 = Recipe.new("Cheese Pizza")
     r1.add_ingredient("Cheese", 20)

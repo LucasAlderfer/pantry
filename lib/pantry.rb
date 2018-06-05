@@ -40,7 +40,6 @@ class Pantry
     recipe.ingredient_types.each do |ingredient|
       needed[ingredient] = recipe.amount_required(ingredient)
     end
-    binding.pry
     needed
   end
 
